@@ -1,23 +1,38 @@
-import logo from './logo.svg';
+
+import { useEffect, useState } from 'react';
 import './App.css';
 
+
 function App() {
+
+  const [items , setItems] = useState([])
+  const [visible , setVisible] = useState(3)
+
+
+  const showMoreItems = () => {
+    setVisible(prev => prev + 3);
+
+  }
+
+
+  useEffect(() => {
+    fetch('https://jsonplaceholder.typicode.com/posts')
+    .then(res => res.json())
+    .then((data) => setItems(data))
+  }, [])
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div className='container'>
+        {items.slice(0, visible).map(item => (
+          <div className='card'>
+            <div className='id'>
+              <span>{item.id}</span>
+              </div>
+              <p>{item.body}</p>
+              </div>
+        ))}
+        <button onClick={showMoreItems}>Load More</button>
+      </div>
     </div>
   );
 }
